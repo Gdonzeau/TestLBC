@@ -97,11 +97,11 @@
 		F0538ECF29AFB37E004153D8 /* TestLBC */ = {
 			isa = PBXGroup;
 			children = (
-				F0538ED029AFB37E004153D8 /* AppDelegate.swift */,
-				F0538ED229AFB37E004153D8 /* SceneDelegate.swift */,
-				F0538ED429AFB37E004153D8 /* ViewController.swift */,
-				F0538ED929AFB383004153D8 /* Assets.xcassets */,
-				F0538EDB29AFB383004153D8 /* LaunchScreen.storyboard */,
+				F0538F0829B601C8004153D8 /* Utility Files */,
+				F0538F0729B601BC004153D8 /* Services */,
+				F0538F0629B601B5004153D8 /* Controller */,
+				F0538F0529B601AE004153D8 /* View */,
+				F0538F0429B601A1004153D8 /* Model */,
 				F0538EDE29AFB383004153D8 /* Info.plist */,
 			);
 			path = TestLBC;
@@ -122,6 +122,46 @@
 				F0538EF329AFB384004153D8 /* TestLBCUITestsLaunchTests.swift */,
 			);
 			path = TestLBCUITests;
+			sourceTree = "<group>";
+		};
+		F0538F0429B601A1004153D8 /* Model */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F0538F0529B601AE004153D8 /* View */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = View;
+			sourceTree = "<group>";
+		};
+		F0538F0629B601B5004153D8 /* Controller */ = {
+			isa = PBXGroup;
+			children = (
+				F0538ED429AFB37E004153D8 /* ViewController.swift */,
+			);
+			path = Controller;
+			sourceTree = "<group>";
+		};
+		F0538F0729B601BC004153D8 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		F0538F0829B601C8004153D8 /* Utility Files */ = {
+			isa = PBXGroup;
+			children = (
+				F0538ED929AFB383004153D8 /* Assets.xcassets */,
+				F0538EDB29AFB383004153D8 /* LaunchScreen.storyboard */,
+				F0538ED029AFB37E004153D8 /* AppDelegate.swift */,
+				F0538ED229AFB37E004153D8 /* SceneDelegate.swift */,
+			);
+			path = "Utility Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
