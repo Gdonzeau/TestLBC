@@ -174,7 +174,7 @@ final class TestLBCTests: XCTestCase {
             
             switch result {
                 case.success(let data):
-                    guard let adressImageUnwrapped = data.imagesUrl["small"] else {
+                    guard let adressImageUnwrapped = data[0].imagesUrl["small"] else {
                         return
                     }
                     XCTAssertEqual(adressImageExpected, adressImageUnwrapped)
