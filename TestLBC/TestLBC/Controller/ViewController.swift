@@ -81,10 +81,10 @@ class ViewController: UIViewController {
             globalStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             globalStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             globalStackView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 20),
-            globalStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor,constant: -120),
+            globalStackView.bottomAnchor.constraint(lessThanOrEqualTo: margins.bottomAnchor,constant: -120),
             
             titleStackView.heightAnchor.constraint(equalToConstant: 32.0),
-            tableStackView.heightAnchor.constraint(equalToConstant: 320.0),
+            tableStackView.heightAnchor.constraint(equalToConstant: 400.0),
             buttonStackView.heightAnchor.constraint(equalToConstant: 60.0)
         ])
     }
@@ -105,8 +105,6 @@ class ViewController: UIViewController {
         ServiceAPI.shared.getAdvertises(stringAdress: url) { result in
             switch result {
                 case.success(let advertises):
-                    print("***** Résutat")
-                    print(advertises)
                     for advertise in advertises {
                         self.advertises.append(advertise)
                     }
@@ -121,7 +119,10 @@ class ViewController: UIViewController {
         tableObjects.reloadData()
     }
     
-
-
+    func allErrors(errorMessage: String, errorTitle: String) {
+        let alertVC = UIAlertController(title: errorTitle, message: errorMessage, preferredStyle: .alert)
+        alertVC.addAction(UIAlertAction(title: "OK", style: .cancel, handler: nil))
+        present(alertVC, animated: true, completion: nil)
+    }
 }
 

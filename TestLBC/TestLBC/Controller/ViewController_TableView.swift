@@ -16,15 +16,39 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        40.0
+        450.0
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         guard let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as? CellAdvertise else {
             return UITableViewCell()
         }
-        cell.setupCell(text: String(advertises[indexPath.row].id))
+        var objectCategory = ""
+        if let category = Category.id[advertises[indexPath.row].categoryId] {
+            objectCategory = category
+        } else {
+            objectCategory = "Inconnue"
+        }
+        let image = UIImageView()
+        guard let imageUrl = advertises[indexPath.row].imagesUrl["thumb"] else {
+            cell.backgroundColor = UIColor.blue
+            return UITableViewCell()
+        }
+        guard let URLUnwrapped = URL(string: imageUrl) else {
+            let error = APIErrors.invalidURL
+            // Gestion des alertes
+            if let errorMessage = error.errorDescription, let errorTitle = error.failureReason {
+                allErrors(errorMessage: errorMessage, errorTitle: errorTitle)
+            }
+            return UITableViewCell()
+        }
+        image.load(url: URLUnwrapped)
         
+        cell.setupCell(title: advertises[indexPath.row].title,
+                       category: objectCategory,
+                       imageView: image)
+        cell.backgroundView = image
+        cell.backgroundView?.contentMode = .scaleAspectFill
         return cell
     }
     
