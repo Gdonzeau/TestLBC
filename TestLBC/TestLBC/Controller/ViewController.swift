@@ -81,7 +81,6 @@ class ViewController: UIViewController {
             globalStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             globalStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             globalStackView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 20),
-            //globalStackView.bottomAnchor.constraint(lessThanOrEqualTo: margins.bottomAnchor,constant: -120),
             globalStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor,constant: -120),
             
             titleStackView.heightAnchor.constraint(equalToConstant: 32.0),
