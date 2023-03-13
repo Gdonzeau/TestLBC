@@ -21,7 +21,7 @@ final class TestLBCTests: XCTestCase {
         //When
         let expectation = XCTestExpectation(description: "Wait for queue change.")
         
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
+        serviceAPI.getDataFromAPI(stringAdress: urlAdress) { result in
             
             switch result {
                     
@@ -50,7 +50,7 @@ final class TestLBCTests: XCTestCase {
         //When
         let expectation = XCTestExpectation(description: "Wait for queue change.")
         
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
+        serviceAPI.getDataFromAPI(stringAdress: urlAdress) { result in
             
             switch result {
                     
@@ -79,7 +79,7 @@ final class TestLBCTests: XCTestCase {
         //When
         let expectation = XCTestExpectation(description: "Wait for queue change.")
         
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
+        serviceAPI.getDataFromAPI(stringAdress: urlAdress) { result in
             
             switch result {
                     
@@ -108,7 +108,7 @@ final class TestLBCTests: XCTestCase {
         //When
         let expectation = XCTestExpectation(description: "Wait for queue change.")
         
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
+        serviceAPI.getDataFromAPI(stringAdress: urlAdress) { result in
             
             switch result {
                     
@@ -127,37 +127,7 @@ final class TestLBCTests: XCTestCase {
         
         wait(for: [expectation], timeout: 0.01)
     }
-    
-    func testGetAdvertisesShouldPostFailedCallbackIfIncorrectData() {
-        let errorExpected:APIErrors = .decodingError
-        var errorReceived:APIErrors = .noError
-        let urlAdress = "http://www.bonneAdresseUrl.com"
-        XCTAssertNotEqual(errorExpected, errorReceived)
-        let serviceAPI = ServiceAPI(
-            session: URLSessionFake(data: FakeResponse.advertiseIncorrectData, response: FakeResponse.responseOK, error: nil))
-        //When
-        let expectation = XCTestExpectation(description: "Wait for queue change.")
-        
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
-            
-            switch result {
-                    
-                case.success( _):
-                    XCTFail("Should not have succeeded")
-                    
-                case.failure(let error):
-                    //Then
-                    XCTAssertEqual(errorExpected, error)
-                    errorReceived = error
-            }
-            XCTAssertEqual(errorExpected, errorReceived)
-            
-            expectation.fulfill()
-        }
-        
-        wait(for: [expectation], timeout: 0.01)
-    }
-    
+ 
     func testGetAdvertisesShouldPostSuccessCallbackIfNoErrorAndCorrectData() {
         //Given
         let adressImageExpected = "https://raw.githubusercontent.com/leboncoin/paperclip/master/ad-small/254308d0083d9293657d938f782c079bfa4a0b3a.jpg"
@@ -170,15 +140,17 @@ final class TestLBCTests: XCTestCase {
         //When
         let expectation = XCTestExpectation(description: "Wait for queue change.")
         
-        serviceAPI.getAdvertises(stringAdress: urlAdress) { result in
+        serviceAPI.getDataFromAPI(stringAdress: urlAdress) { result in
             
             switch result {
                 case.success(let data):
-                    guard let adressImageUnwrapped = data[0].imagesUrl["small"] else {
-                        return
+                    if let advertises = try? JSONDecoder().decode([Advertise]?.self, from: data as! Data) {
+                        guard let adressImageUnwrapped = advertises[0].imagesUrl["small"] else {
+                            return
+                        }
+                        XCTAssertEqual(adressImageExpected, adressImageUnwrapped)
+                        adressImage = adressImageUnwrapped
                     }
-                    XCTAssertEqual(adressImageExpected, adressImageUnwrapped)
-                    adressImage = adressImageUnwrapped
                     
                 case.failure(let error):
                     XCTFail("Should not have failed with : \(error)")

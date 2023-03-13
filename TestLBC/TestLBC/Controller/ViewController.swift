@@ -13,6 +13,18 @@ class ViewController: UIViewController {
     private let tableObjects = UITableView()
     private let reloadButton = UIButton()
     private let activityIndicator = UIActivityIndicatorView()
+    private var areCategoriesLoaded: Bool = false {
+        didSet {
+            if areCategoriesLoaded {
+                reloadButton.isHidden = false
+                activityIndicator.isHidden = true
+            } else {
+                reloadButton.isHidden = true
+                activityIndicator.isHidden = false
+            }
+        }
+    }
+    private var isListingLoaded: Bool = false
 
     let cellReuseIdentifier = "cellAdvertise"
     var advertises : [Advertise] = []
@@ -26,7 +38,8 @@ class ViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         activityIndicator.stopAnimating()
-        loadingData()
+        loadingCategory()
+        //loadingData()
         // Do any additional setup after loading the view.
     }
     
@@ -81,10 +94,10 @@ class ViewController: UIViewController {
             globalStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             globalStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             globalStackView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 20),
-            globalStackView.bottomAnchor.constraint(lessThanOrEqualTo: margins.bottomAnchor,constant: -120),
+            globalStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
             
             titleStackView.heightAnchor.constraint(equalToConstant: 32.0),
-            tableStackView.heightAnchor.constraint(equalToConstant: 400.0),
+            tableStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 400),
             buttonStackView.heightAnchor.constraint(equalToConstant: 60.0)
         ])
     }
@@ -95,25 +108,52 @@ class ViewController: UIViewController {
         tableObjects.delegate = self
     }
     
-    @objc private func loadingData() { // Remplacer par le call API
+    private func loadingCategory() {
+        callingAPI(url: Urls.categories)
+    }
+    
+    @objc private func loadingData() {
+        
+        callingAPI(url: Urls.listing)
+         
+    }
+    
+    private func callingAPI(url: String) { // Remplacer par le call API
         reloadButton.isHidden = true // On cache le bouton pour éviter une succession de call.
         activityIndicator.startAnimating()
         advertises = []
         tableObjects.reloadData()
         
-        let url = "https://raw.githubusercontent.com/leboncoin/paperclip/master/listing.json"
-        ServiceAPI.shared.getAdvertises(stringAdress: url) { result in
+        ServiceAPI.shared.getDataFromAPI(stringAdress: url) { result in
             switch result {
-                case.success(let advertises):
-                    for advertise in advertises {
-                        self.advertises.append(advertise)
+                case.success(let data):
+                    if let advertises = try? JSONDecoder().decode([Advertise]?.self, from: data as! Data) {
+                        print("Data Advertise")
+                        for advertise in advertises {
+                            self.advertises.append(advertise)
+                            self.isListingLoaded = true
+                        }
+                        self.tableObjects.reloadData()
+                        self.reloadButton.isHidden = false
+                        self.activityIndicator.stopAnimating()
+                        
+                    } else if let data = try? JSONDecoder().decode([CategoryDowloaded]?.self, from: data as! Data) {
+                        print("Data Category")
+                        Category.id = [:]
+                        for category in data {
+                            Category.id[category.id] = category.name
+                        }
+                        self.areCategoriesLoaded = true
+                    } else {
+                        let error: APIErrors = .decodingError
+                        if let errorMessage = error.errorDescription, let errorTitle = error.failureReason {
+                            self.allErrors(errorMessage: errorMessage, errorTitle: errorTitle)
+                        }
                     }
-                    self.tableObjects.reloadData()
-                    self.reloadButton.isHidden = false
-                    self.activityIndicator.stopAnimating()
                 case.failure(let error):
-                    print("***** Erreur")
-                    print(error)
+                    if let errorMessage = error.errorDescription, let errorTitle = error.failureReason {
+                        self.allErrors(errorMessage: errorMessage, errorTitle: errorTitle)
+                    }
             }
         }
         tableObjects.reloadData()

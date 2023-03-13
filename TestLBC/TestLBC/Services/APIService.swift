@@ -19,7 +19,7 @@ class ServiceAPI {
     private var task:URLSessionDataTask?
     
     // Preparation to ask request
-    func getAdvertises(stringAdress: String, infoBack: @escaping (Result<[Advertise],APIErrors>)->Void) {
+    func getDataFromAPI(stringAdress: String, infoBack: @escaping (Result<Any,APIErrors>)->Void) {
         // Check that string URL is correct
         guard let url = URL(string: stringAdress) else {
             infoBack(.failure(.invalidURL))
@@ -43,17 +43,12 @@ class ServiceAPI {
                     infoBack(.failure(.invalidStatusCode))
                     return
                 }
-                do {
-                    let data = try JSONDecoder().decode([Advertise].self, from: dataUnwrapped)
-                    infoBack(.success(data)) // Send back datas
-                    
-                } catch {
-                    infoBack(.failure(.decodingError)) //If error with decoding datas
-                }
+                    infoBack(.success(dataUnwrapped))
             }
         }
         task?.resume()
     }
+    
     // To prepare request, add POST and different specifications
     func createAdvertisesRequest(url:URL) -> URLRequest {
         var request = URLRequest(url:url)
@@ -61,4 +56,5 @@ class ServiceAPI {
         
         return request
     }
+    
 }
