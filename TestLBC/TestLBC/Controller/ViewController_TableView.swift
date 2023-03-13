@@ -46,7 +46,8 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
         
         cell.setupCell(title: advertises[indexPath.row].title,
                        category: objectCategory,
-                       imageView: image)
+                       urgent: advertises[indexPath.row].isUrgent,
+                       price: advertises[indexPath.row].price)
         cell.backgroundView = image
         cell.backgroundView?.contentMode = .scaleAspectFill
         return cell

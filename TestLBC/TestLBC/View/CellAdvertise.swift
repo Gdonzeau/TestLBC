@@ -9,13 +9,7 @@ import UIKit
 
 class CellAdvertise: UITableViewCell {
     
-    var objectImageView: UIImageView = {
-        let imageView = UIImageView()
-        imageView.contentMode = .scaleAspectFill
-        imageView.translatesAutoresizingMaskIntoConstraints = false
-        imageView.clipsToBounds = true
-        return imageView
-    }()
+    var urgent: Bool = false
     
     let title: UILabel = {
         let label = UILabel()
@@ -23,6 +17,8 @@ class CellAdvertise: UITableViewCell {
         label.textAlignment = .center
         label.backgroundColor = ColorsScheme.backgroundSubtitle
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 5
         return label
     }()
     
@@ -32,6 +28,19 @@ class CellAdvertise: UITableViewCell {
         label.textAlignment = .center
         label.backgroundColor = ColorsScheme.backgroundSubtitle
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 5
+        return label
+    }()
+    
+    let price: UILabel = {
+        let label = UILabel()
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        label.backgroundColor = ColorsScheme.backgroundSubtitle
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.layer.masksToBounds = true
+        label.layer.cornerRadius = 5
         return label
     }()
     
@@ -56,15 +65,15 @@ class CellAdvertise: UITableViewCell {
         categoryStackView.translatesAutoresizingMaskIntoConstraints = false
         addSubview(categoryStackView)
         
-        let photoStackView = UIStackView(arrangedSubviews: [objectImageView])
-        photoStackView.axis = .vertical
-        photoStackView.alignment = .fill
-        photoStackView.distribution = .fillEqually
-        photoStackView.spacing = 5
-        photoStackView.translatesAutoresizingMaskIntoConstraints = false
-        addSubview(photoStackView)
+        let priceStackView = UIStackView(arrangedSubviews: [price])
+        priceStackView.axis = .horizontal
+        priceStackView.alignment = .fill
+        priceStackView.distribution = .fillEqually
+        priceStackView.spacing = 5
+        priceStackView.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(priceStackView)
         
-        let generalStackView = UIStackView(arrangedSubviews: [titleStackView, categoryStackView, photoStackView])
+        let generalStackView = UIStackView(arrangedSubviews: [titleStackView, categoryStackView])
         generalStackView.axis = .vertical
         generalStackView.alignment = .fill
         generalStackView.spacing = 5
@@ -75,17 +84,28 @@ class CellAdvertise: UITableViewCell {
             generalStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor),
             generalStackView.trailingAnchor.constraint(equalTo: margins.trailingAnchor),
             generalStackView.topAnchor.constraint(equalTo: margins.topAnchor),
-            generalStackView.bottomAnchor.constraint(lessThanOrEqualTo: margins.bottomAnchor,constant: -5),
+            generalStackView.heightAnchor.constraint(equalToConstant: 101),
+            
             titleStackView.heightAnchor.constraint(equalToConstant: 64.0),
             categoryStackView.heightAnchor.constraint(equalToConstant: 32.0),
-            photoStackView.heightAnchor.constraint(equalToConstant: 300.0)
+            
+            priceStackView.heightAnchor.constraint(equalToConstant: 32),
+            priceStackView.leadingAnchor.constraint(equalTo: margins.leadingAnchor, constant: 10),
+            priceStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor, constant: -10),
+            priceStackView.widthAnchor.constraint(equalToConstant: 80)
+            
         ])
     }
     
-    func setupCell(title: String, category: String, imageView: UIImageView) {
+    func setupCell(title: String, category: String, urgent: Bool, price: Int) {
         self.title.text = title
         self.category.text = category
-        self.objectImageView = imageView
+        self.urgent = urgent
+        self.price.text = String(price) + " €"
+        
+        if self.urgent {
+            self.title.backgroundColor = ColorsScheme.backgroundUrgent
+        }
     }
     
     required init?(coder: NSCoder) {
