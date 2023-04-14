@@ -56,5 +56,13 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print("Touché")
         tableView.deselectRow(at: indexPath, animated: true)
+        
+        let advertiseViewController = AdvertiseViewController()
+        advertiseViewController.titleLabel.text = advertises[indexPath.row].title
+        advertiseViewController.advertiseDescription.text = advertises[indexPath.row].description
+        
+        let navVC = UINavigationController(rootViewController: advertiseViewController)
+        navVC.modalPresentationStyle = .fullScreen
+        present(navVC, animated: true)
     }
 }

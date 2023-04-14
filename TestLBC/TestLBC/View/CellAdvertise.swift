@@ -9,9 +9,9 @@ import UIKit
 
 class CellAdvertise: UITableViewCell {
     
-    var urgent: Bool = false
+    private var urgent: Bool = false
     
-    let title: UILabel = {
+    private let title: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
@@ -22,7 +22,7 @@ class CellAdvertise: UITableViewCell {
         return label
     }()
     
-    let category: UILabel = {
+    private let category: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center
@@ -33,7 +33,7 @@ class CellAdvertise: UITableViewCell {
         return label
     }()
     
-    let price: UILabel = {
+    private let price: UILabel = {
         let label = UILabel()
         label.numberOfLines = 0
         label.textAlignment = .center

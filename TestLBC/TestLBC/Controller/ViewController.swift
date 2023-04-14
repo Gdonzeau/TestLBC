@@ -39,8 +39,6 @@ class ViewController: UIViewController {
         super.viewDidLoad()
         activityIndicator.stopAnimating()
         loadingCategory()
-        //loadingData()
-        // Do any additional setup after loading the view.
     }
     
     private func setupView() {
@@ -53,39 +51,34 @@ class ViewController: UIViewController {
         text.textAlignment = .center
         text.font = UIFont.boldSystemFont(ofSize: 20)
         text.contentMode = .scaleAspectFit
+        text.layer.masksToBounds = true
+        text.layer.cornerRadius = 5
         text.translatesAutoresizingMaskIntoConstraints = false
 
         tableObjects.layer.masksToBounds = true
+        tableObjects.layer.cornerRadius = 5
         tableObjects.translatesAutoresizingMaskIntoConstraints = false
         
         reloadButton.backgroundColor = ColorsScheme.backgroundButton
         reloadButton.layer.cornerRadius = 5
-        reloadButton.setTitle("Mise à jour", for: .normal)
+        reloadButton.setTitle("Charger les annonces", for: .normal)
         reloadButton.addTarget(self, action: #selector(loadingData), for: .touchUpInside)
 
         // MARK: - Contraints
         
         let margins = view.layoutMarginsGuide
         
-        let titleStackView = UIStackView(arrangedSubviews: [text])
-        titleStackView.translatesAutoresizingMaskIntoConstraints = false
-        
-        let tableStackView = UIStackView(arrangedSubviews: [tableObjects])
-        tableStackView.translatesAutoresizingMaskIntoConstraints = false
-        
         let buttonStackView = UIStackView(arrangedSubviews: [reloadButton, activityIndicator])
         buttonStackView.translatesAutoresizingMaskIntoConstraints = false
         
-        
-        
         //GlobalStackView
-        let globalStackView = UIStackView(arrangedSubviews: [titleStackView, tableStackView, buttonStackView])
+        let globalStackView = UIStackView(arrangedSubviews: [text, tableObjects, buttonStackView])
         globalStackView.axis = .vertical
         globalStackView.alignment = .fill
         globalStackView.spacing = 5
         globalStackView.translatesAutoresizingMaskIntoConstraints = false
-        globalStackView.addArrangedSubview(titleStackView)
-        globalStackView.addArrangedSubview(tableStackView)
+        globalStackView.addArrangedSubview(text)
+        globalStackView.addArrangedSubview(tableObjects)
         globalStackView.addArrangedSubview(buttonStackView)
 
         view.addSubview(globalStackView)
@@ -96,8 +89,8 @@ class ViewController: UIViewController {
             globalStackView.topAnchor.constraint(equalTo: margins.topAnchor, constant: 20),
             globalStackView.bottomAnchor.constraint(equalTo: margins.bottomAnchor),
             
-            titleStackView.heightAnchor.constraint(equalToConstant: 32.0),
-            tableStackView.heightAnchor.constraint(greaterThanOrEqualToConstant: 400),
+            text.heightAnchor.constraint(equalToConstant: 50),
+            tableObjects.heightAnchor.constraint(greaterThanOrEqualToConstant: 400),
             buttonStackView.heightAnchor.constraint(equalToConstant: 60.0)
         ])
     }
@@ -113,7 +106,7 @@ class ViewController: UIViewController {
     }
     
     @objc private func loadingData() {
-        
+        //test()
         callingAPI(url: Urls.listing)
          
     }
